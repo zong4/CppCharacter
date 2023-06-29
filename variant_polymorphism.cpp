@@ -9,6 +9,7 @@ class Base
 {
 public:
     Base() {}
+    ~Base() {}
 
     virtual void add() = 0;
 };
@@ -20,8 +21,9 @@ public:
 
 public:
     Drive1() {}
+    ~Drive1() {}
 
-    virtual void add() override
+    virtual void add() override final
     {
         // num += 1;
     }
@@ -36,8 +38,9 @@ public:
 
 public:
     Drive2() {}
+    ~Drive2() {}
 
-    virtual void add() override
+    virtual void add() override final
     {
         // num += 2;
     }
@@ -77,61 +80,75 @@ int main()
         }
     }
 
-    int time = 10;
+    int time = 100000;
 
-    auto start_time = std::chrono::steady_clock::now();
-    for(int i = 0; i < time; i++)
     {
-        for(auto const& ele : pointVec)
+        auto start_time = std::chrono::steady_clock::now();
+        for(int i = 0; i < time; i++)
         {
-            ele->add();
-        }
-    }
-    auto end_time = std::chrono::steady_clock::now();
-
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    std::cout << "point(vtb) cast time: " << duration.count() << std::endl;
-
-    start_time = std::chrono::steady_clock::now();
-    for(int i = 0; i < time; i++)
-    {
-        for(auto const& ele : pointVec)
-        {
-            if(dynamic_cast<Drive1*>(ele))
+            for(auto const& ele : pointVec)
+            {
                 ele->add();
-            else if(dynamic_cast<Drive2*>(ele))
-                ele->add();
+            }
         }
+        auto end_time = std::chrono::steady_clock::now();
+
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        std::cout << "point(vtb) cast time: " << duration.count() << std::endl;
     }
-    end_time = std::chrono::steady_clock::now();
 
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    std::cout << "point(dynamic_cast) cast time: " << duration.count() << std::endl;
-
-    auto CallAdd = [](auto& ele) { ele.add(); };
-
-    start_time = std::chrono::steady_clock::now();
-    for(int i = 0; i < time; i++)
     {
-        for(auto& ele : variantVec)
+        auto start_time = std::chrono::steady_clock::now();
+        for(int i = 0; i < time; i++)
         {
-            // if(std::is_same_v())
-            // {
-            //     std::get<0>(ele).add();
-            // }
-            // catch(const std::bad_variant_access& e)
-            // {
-            //     std::get<1>(ele).add();
-            // }
-                     
-            // ele.add(); // variant is a class
-            std::visit(CallAdd, ele);
+            for(auto const& ele : pointVec)
+            {
+                if(dynamic_cast<Drive1*>(ele))
+                    ele->add();
+                else
+                    ele->add();
+            }
         }
-    }
-    end_time = std::chrono::steady_clock::now();
+        auto end_time = std::chrono::steady_clock::now();
 
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    std::cout << "variant cast time: " << duration.count() << std::endl;
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        std::cout << "point(dynamic_cast) cast time: " << duration.count() << std::endl;
+    }
+
+    {
+        auto start_time = std::chrono::steady_clock::now();
+        for(int i = 0; i < time; i++)
+        {
+            for(auto& ele : variantVec)
+            {
+                if(std::holds_alternative<Drive1>(ele))
+                    std::get<0>(ele).add();
+                else
+                    std::get<1>(ele).add();
+            }
+        }
+        auto end_time = std::chrono::steady_clock::now();
+
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        std::cout << "variant(holds_alternative) cast time: " << duration.count() << std::endl;
+    }
+
+    {
+        auto CallAdd = [](auto& ele) { ele.add(); };
+
+        auto start_time = std::chrono::steady_clock::now();
+        for(int i = 0; i < time; i++)
+        {
+            for(auto& ele : variantVec)
+            {
+                std::visit(CallAdd, ele);
+            }
+        }
+        auto end_time = std::chrono::steady_clock::now();
+
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        std::cout << "variant(visit) cast time: " << duration.count() << std::endl;
+    }
 
     return 0;
 }
