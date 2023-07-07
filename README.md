@@ -1,2 +1,7 @@
-# Test_Cpp_Character
-Test cpp character
+# Useage
+
+Some character tests when learning.
+
+# Environment
+
+g++.
