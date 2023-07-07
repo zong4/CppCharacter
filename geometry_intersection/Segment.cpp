@@ -1,7 +1,9 @@
-#include "Point.h"
+#include "Segment.h"
 
-bool Point::addMap(std::string const& myName)
+bool Segment::addMap()
 {
+    std::string myName = typeid(*this).name();
+
     for(auto const& name : Register::itemClassNames())
     {
         Register::addMap(std::make_pair(myName, name), [](Item const* item1, Item const* item2) -> bool

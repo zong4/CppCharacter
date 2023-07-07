@@ -8,5 +8,7 @@ class Item
 public:
     Item(){}
     virtual ~Item(){}
+
+    virtual bool addMap() = 0; // register item intersection function
 };
 
