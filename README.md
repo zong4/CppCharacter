@@ -1,4 +1,4 @@
-# Useage
+# Usage
 
 Some character tests when learning.
 
