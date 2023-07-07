@@ -11,10 +11,12 @@ class Register
 {
 public:
     typedef std::pair<std::string, std::string> string_pair;
-    typedef std::function<void(Item const* item)> intersection_func;
+    typedef std::function<bool(Item const*, Item const*)> intersection_func;
 
-private:
-    static std::map<std::pair<std::string, std::string>, std::function<void(Item const* item)>> _intersectionMap;
+public:
+    static std::map<string_pair, intersection_func> _intersectionMap;
+    static uint32_t _mapCallTimes;
+
     static std::set<std::string> _itemClassNames;
     static uint32_t _setCallTimes;
 
@@ -23,9 +25,11 @@ public:
     ~Register(){}
 
     static bool addMap(string_pair const& names, intersection_func const& func);
+    static std::map<string_pair, intersection_func> const& intersectionMap() {return _intersectionMap;}
+    static std::map<string_pair, intersection_func>& mutableIntersectionMap() {return _intersectionMap;}
+    static void printMap(); // print map
 
     static bool addSet(std::string const& name);
-
-    // print set
-    static void printSet();
+    static std::set<std::string> const& itemClassNames() {return _itemClassNames;}
+    static void printSet(); // print set
 };

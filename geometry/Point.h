@@ -11,21 +11,11 @@ private:
 public:
     Point()
     {
-        static bool setFlag = Register::addSet(typeid(*this).name());
-        static bool mapFlag = addMap();
+        static std::string name = typeid(*this).name();
+        static bool setFlag = Register::addSet(name);
+        static bool mapFlag = addMap(name);
     }
     virtual ~Point(){}
 
-    static bool addMap()
-    {
-        // for(auto const& Register::_itemClassNames)
-        // {
-        //     Register::addMap(std::make_pair("Point", item), [](Item const* item)
-        //     {
-        //         std::cout<<"Point::lookup()"<<std::endl;
-        //     });
-        // }
-
-        return true;
-    }
+    static bool addMap(std::string const& myName);
 };

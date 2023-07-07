@@ -1,6 +1,6 @@
-#include "Point.h"
+#include "Segment.h"
 
-bool Point::addMap(std::string const& myName)
+bool Segment::addMap(std::string const& myName)
 {
     for(auto const& name : Register::itemClassNames())
     {
