@@ -41,9 +41,10 @@ public:
 
         auto                       bind_func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
         std::shared_ptr<task_type> task      = std::make_shared<task_type>(std::move(bind_func));
-        future_type                fut       = task->get_future();
         _tasks.emplace([task]() -> void { (*task)(); });
         _cond.notify_one();
+
+        future_type fut = task->get_future();
         return fut;
     }
 
