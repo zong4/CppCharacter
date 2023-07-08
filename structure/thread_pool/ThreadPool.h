@@ -30,7 +30,22 @@ public:
     void terminate();
 
     template <class F, class... Args>
-    auto async(F&& f, Args&&... args) -> std::future<decltype(f(args...))>;
+    auto async(F&& f, Args&&... args) -> std::future<decltype(f(args...))>
+    {
+        using return_type = decltype(f(args...));
+        using future_type = std::future<return_type>;
+        using task_type   = std::packaged_task<return_type()>;
+
+        if (!isRunning())
+            throw std::runtime_error("thread pool is not running");
+
+        auto                       bind_func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+        std::shared_ptr<task_type> task      = std::make_shared<task_type>(std::move(bind_func));
+        future_type                fut       = task->get_future();
+        _tasks.emplace([task]() -> void { (*task)(); });
+        _cond.notify_one();
+        return fut;
+    }
 
 private:
     void init(int num);
@@ -38,21 +53,3 @@ private:
 
     void spawn();
 };
-
-template <class F, class... Args>
-auto ThreadPool::async(F&& f, Args&&... args) -> std::future<decltype(f(args...))>
-{
-    using return_type = decltype(f(args...));
-    using future_type = std::future<return_type>;
-    using task_type   = std::packaged_task<return_type()>;
-
-    if (!isRunning())
-        throw std::runtime_error("thread pool is not running");
-
-    auto                       bind_func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-    std::shared_ptr<task_type> task      = std::make_shared<task_type>(std::move(bind_func));
-    future_type                fut       = task->get_future();
-    _tasks.emplace([task]() -> void { (*task)(); });
-    _cond.notify_one();
-    return fut;
-}
