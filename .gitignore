@@ -33,3 +33,8 @@
 
 # Vscode cache
 .vscode/
+
+# XMake cache
+.xmake/
+vsxmake2022/
+build/

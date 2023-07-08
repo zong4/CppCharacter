@@ -8,27 +8,27 @@ int main()
     ThreadPool& pool = ThreadPool::instance();
 
     // print pool status
-    // std::cout << "pool is running: " << pool.isRunning() << std::endl;
+    std::cout << "pool is running: " << pool.isRunning() << std::endl;
 
     {
-        std::vector<std::future<int>>  int_futs;
-        std::vector<std::future<bool>> bool_futs;
+        std::vector<std::future<int>> int_futs;
 
-        // for (int i = 0; i != 30; ++i)
-        // {
-        //     int_futs.emplace_back(pool.async([](int i) -> int { return i; }, i));
-        // }
+        for (int i = 0; i < 10; ++i)
+        {
+            int_futs.emplace_back(pool.async([](int i) -> int { return i; }, i));
+        }
 
-        // for (int i = 0; i != 30; ++i)
-        // {
-        //     bool_futs.emplace_back(pool.async([](int i) -> bool { return i % 2 == 0; }, i));
-        // }
+        bool flag = true;
+        for (int i = 0; i != 10; ++i)
+        {
+            if (int_futs[i].get() != i)
+                flag = false;
+        }
 
-        // for (int i = 0; i != 30; ++i)
-        // {
-        //     int_futs[i].get() == i;
-        //     bool_futs[i].get() == (i % 2 == 0);
-        // }
+        if (flag)
+            std::cout << "test successful" << std::endl;
+        else
+            std::cout << "test failed" << std::endl;
     }
 
     return 0;

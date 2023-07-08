@@ -17,13 +17,11 @@ bool ThreadPool::isRunning() const
     return _running;
 }
 
-#include <iostream>
-
 void ThreadPool::terminate()
 {
     {
         wlock lock(_mtx);
-        if (isRunning())
+        if (_running)
             _running = false;
         else
             return;
@@ -31,27 +29,25 @@ void ThreadPool::terminate()
 
     _cond.notify_all();
     for (auto& thread : _threads)
-    {
         thread.join();
-    }
 }
 
 void ThreadPool::init(int num)
 {
     wlock lock(_mtx);
 
+    _running = true;
+
     _threads.reserve(num);
     for (int i = 0; i < num; ++i)
         _threads.emplace_back(std::thread(std::bind(&ThreadPool::spawn, this)));
-
-    _running = true;
 }
 
 void ThreadPool::cancel()
 {
     {
         wlock lock(_mtx);
-        if (isRunning())
+        if (_running)
             _running = false;
         else
             return;
@@ -61,9 +57,7 @@ void ThreadPool::cancel()
 
     _cond.notify_all();
     for (auto& thread : _threads)
-    {
         thread.join();
-    }
 }
 
 void ThreadPool::spawn()
@@ -77,8 +71,6 @@ void ThreadPool::spawn()
             wlock lock(_mtx);
             _cond.wait(lock, [this, &pop, &task] {
                 pop = _tasks.pop(task);
-                std::cout << "pop: " << pop << std::endl;
-                std::cout << "running: " << _running << std::endl;
                 return !_running || pop;
             });
         }
