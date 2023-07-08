@@ -1,6 +1,6 @@
 add_rules("mode.debug", "mode.release")
 
-target("thread_pool")
+target("test")
     set_kind("binary")
 
     add_headerfiles("*.h", "./**/*.h")

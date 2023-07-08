@@ -70,7 +70,7 @@ void ThreadPool::spawn()
         {
             wlock lock(_mtx);
             _cond.wait(lock, [this, &pop, &task] {
-                pop = _tasks.pop(task);
+                pop = _tasks.pop_front(task);
                 return !_running || pop;
             });
         }
