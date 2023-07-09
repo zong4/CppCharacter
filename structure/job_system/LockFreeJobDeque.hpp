@@ -2,22 +2,22 @@
 
 #include <deque>
 
-#include "pch.h"
+#include "../thread_pool/pch.h"
 
 template <typename T>
-class SafeJobDeque : public std::deque<T>
+class LockFreeJobDeque : public std::deque<T>
 {
 private:
     mutable std::shared_mutex _headMtx;
     mutable std::shared_mutex _tailMtx;
 
 public:
-    SafeJobDeque() = default;
-    ~SafeJobDeque() { clear(); }
-    SafeJobDeque(SafeJobDeque const&)            = delete;
-    SafeJobDeque(SafeJobDeque&&)                 = delete;
-    SafeJobDeque& operator=(SafeJobDeque const&) = delete;
-    SafeJobDeque& operator=(SafeJobDeque&&)      = delete;
+    LockFreeJobDeque() = default;
+    ~LockFreeJobDeque() { clear(); }
+    LockFreeJobDeque(LockFreeJobDeque const&)            = delete;
+    LockFreeJobDeque(LockFreeJobDeque&&)                 = delete;
+    LockFreeJobDeque& operator=(LockFreeJobDeque const&) = delete;
+    LockFreeJobDeque& operator=(LockFreeJobDeque&&)      = delete;
 
     bool   empty() const;
     size_t size() const;
@@ -35,7 +35,7 @@ public:
 };
 
 template <typename T>
-bool SafeJobDeque<T>::empty() const
+bool LockFreeJobDeque<T>::empty() const
 {
     rlock h_lock(_headMtx);
     rlock t_lock(_tailMtx);
@@ -43,7 +43,7 @@ bool SafeJobDeque<T>::empty() const
 }
 
 template <typename T>
-size_t SafeJobDeque<T>::size() const
+size_t LockFreeJobDeque<T>::size() const
 {
     rlock h_lock(_headMtx);
     rlock t_lock(_tailMtx);
@@ -51,15 +51,13 @@ size_t SafeJobDeque<T>::size() const
 }
 
 template <typename T>
-void SafeJobDeque<T>::clear()
+void LockFreeJobDeque<T>::clear()
 {
-    wlock h_lock(_headMtx);
-    wlock t_lock(_tailMtx);
     std::deque<T>::clear();
 }
 
 template <typename T>
-bool SafeJobDeque<T>::pop_front(T& holder)
+bool LockFreeJobDeque<T>::pop_front(T& holder)
 {
     wlock h_lock(_headMtx);
 
@@ -72,7 +70,7 @@ bool SafeJobDeque<T>::pop_front(T& holder)
 }
 
 template <typename T>
-bool SafeJobDeque<T>::pop_back(T& holder)
+bool LockFreeJobDeque<T>::pop_back(T& holder)
 {
     wlock t_lock(_tailMtx);
 
@@ -85,14 +83,13 @@ bool SafeJobDeque<T>::pop_back(T& holder)
 }
 
 template <typename T>
-void SafeJobDeque<T>::push_front(T const& obj)
+void LockFreeJobDeque<T>::push_front(T const& obj)
 {
-    wlock h_lock(_headMtx);
     std::deque<T>::push_front(obj);
 }
 
 template <typename T>
-void SafeJobDeque<T>::push_back(T const& obj)
+void LockFreeJobDeque<T>::push_back(T const& obj)
 {
     wlock t_lock(_tailMtx);
     std::deque<T>::push_back(obj);
@@ -100,15 +97,14 @@ void SafeJobDeque<T>::push_back(T const& obj)
 
 template <typename T>
 template <typename... Args>
-void SafeJobDeque<T>::emplace_front(Args&&... args)
+void LockFreeJobDeque<T>::emplace_front(Args&&... args)
 {
-    wlock h_lock(_headMtx);
     std::deque<T>::emplace_front(std::forward<Args>(args)...);
 }
 
 template <typename T>
 template <typename... Args>
-void SafeJobDeque<T>::emplace_back(Args&&... args)
+void LockFreeJobDeque<T>::emplace_back(Args&&... args)
 {
     wlock t_lock(_tailMtx);
     std::deque<T>::emplace_back(std::forward<Args>(args)...);

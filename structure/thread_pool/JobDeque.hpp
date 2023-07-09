@@ -2,7 +2,7 @@
 
 #include <deque>
 
-#include "../thread_pool/pch.h"
+#include "pch.h"
 
 template <typename T>
 class JobDeque : public std::deque<T>
@@ -53,6 +53,8 @@ size_t JobDeque<T>::size() const
 template <typename T>
 void JobDeque<T>::clear()
 {
+    wlock h_lock(_headMtx);
+    wlock t_lock(_tailMtx);
     std::deque<T>::clear();
 }
 
@@ -85,6 +87,7 @@ bool JobDeque<T>::pop_back(T& holder)
 template <typename T>
 void JobDeque<T>::push_front(T const& obj)
 {
+    wlock h_lock(_headMtx);
     std::deque<T>::push_front(obj);
 }
 
@@ -99,6 +102,7 @@ template <typename T>
 template <typename... Args>
 void JobDeque<T>::emplace_front(Args&&... args)
 {
+    wlock h_lock(_headMtx);
     std::deque<T>::emplace_front(std::forward<Args>(args)...);
 }
 

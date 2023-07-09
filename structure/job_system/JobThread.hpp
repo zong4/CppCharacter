@@ -3,7 +3,6 @@
 #include <future>
 #include <thread>
 
-#include "JobDeque.hpp"
 #include "JobDequeManager.hpp"
 
 class JobThread : public Uncopyable
