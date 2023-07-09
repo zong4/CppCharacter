@@ -8,6 +8,10 @@ g++, which maybe cause different physical memory model.
 
 # Introduction
 
+## geometry
+
+This method can hide the bottom implementation details.
+
 ## geometry_intersection
 
 However this structure isn't best, it will waste time(about O(logN)) to search the fix intersection function, but it can be expand dynamicly, which better than call template directly.
