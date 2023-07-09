@@ -8,9 +8,7 @@
 class ThreadPool : public Uncopyable
 {
 private:
-    bool                      _running = false;
-    mutable std::shared_mutex _mtx;
-    // std::shared_ptr<std::condition_variable_any> _cv;
+    bool                                    _running = false;
     std::vector<std::unique_ptr<JobThread>> _threads;
 
 private:
@@ -21,7 +19,6 @@ public:
     static ThreadPool& instance(int num);
 
     bool isRunning() const;
-    // std::shared_ptr<std::condition_variable_any> getCond() const;
 
     void terminate();
 

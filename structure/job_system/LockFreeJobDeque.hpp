@@ -58,6 +58,10 @@ template <typename T>
 void LockFreeJobDeque<T>::push_front(T const& obj)
 {
     std::deque<T>::push_front(obj);
+
+    // add barrier
+    COMPILER_BARRIER;
+
     _size.fetch_add(1, std::memory_order_relaxed);
 }
 
@@ -66,5 +70,9 @@ template <typename... Args>
 void LockFreeJobDeque<T>::emplace_front(Args&&... args)
 {
     std::deque<T>::emplace_front(std::forward<Args>(args)...);
+
+    // add barrier
+    COMPILER_BARRIER;
+
     _size.fetch_add(1, std::memory_order_relaxed);
 }

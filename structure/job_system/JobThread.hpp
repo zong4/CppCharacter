@@ -1,6 +1,5 @@
 #pragma once
 
-#include <future>
 #include <thread>
 
 #include "JobDequeManager.hpp"
@@ -23,14 +22,21 @@ public:
 private:
     void spawn()
     {
-        while (_running)
+        for (;;)
         {
+            JobDequeManager&      jobDequeManager = JobDequeManager::instance();
             std::function<void()> task;
 
-            if (JobDequeManager::instance()[_jobDequeId]->pop_front(task))
-                task();
-            // else
-            //     std::this_thread::yield();
+            {
+                rlock lock(jobDequeManager._mtx);
+                jobDequeManager._cv.wait(
+                    lock, [this, &jobDequeManager, &task] { return !_running || jobDequeManager[_jobDequeId]->pop_front(task); });
+            }
+
+            if (!_running)
+                return;
+
+            task();
         }
     }
 };

@@ -16,22 +16,15 @@ bool ThreadPool::isRunning() const
     return _running;
 }
 
-// std::shared_ptr<std::condition_variable_any> ThreadPool::getCond() const
-// {
-//     rlock lock(_mtx);
-//     return _cv;
-// }
-
 void ThreadPool::terminate()
 {
     _running = false;
-
-    // _cv->notify_all();
     for (auto& thread : _threads)
-    {
         thread->setRunning(false);
+
+    JobDequeManager::instance()._cv.notify_all();
+    for (auto& thread : _threads)
         thread->join();
-    }
 }
 
 void ThreadPool::init(int num)
