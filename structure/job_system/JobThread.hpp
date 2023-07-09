@@ -29,8 +29,8 @@ private:
 
             if (JobDequeManager::instance()[_jobDequeId]->pop_front(task))
                 task();
-            else
-                std::this_thread::yield();
+            // else
+            //     std::this_thread::yield();
         }
     }
 };

@@ -27,7 +27,7 @@ public:
     inline const std::shared_ptr<LockFreeJobDeque<std::function<void()>>> operator[](int index) const { return _jobDeques[index]; }
     inline void                                                           clear() { _jobDeques.clear(); }
 
-    inline int add() // return index
+    inline int addDeque() // return index
     {
         _jobDeques.emplace_back(std::make_shared<LockFreeJobDeque<std::function<void()>>>());
         return _jobDeques.size() - 1;

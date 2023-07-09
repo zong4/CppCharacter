@@ -39,6 +39,7 @@ void ThreadPool::init(int num)
     _running = true;
 
     _threads.reserve(num);
+    JobDequeManager& jobDequeManager = JobDequeManager::instance();
     for (int i = 0; i < num; ++i)
-        _threads.emplace_back(std::make_unique<JobThread>(JobDequeManager::instance().add()));
+        _threads.emplace_back(std::make_unique<JobThread>(jobDequeManager.addDeque()));
 }

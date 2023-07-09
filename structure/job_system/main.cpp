@@ -7,5 +7,7 @@ int main()
 {
     ThreadPool& threadPool = ThreadPool::instance(4);
 
+    std::cout << "test" << std::endl;
+
     return 0;
 }
