@@ -9,8 +9,8 @@
 class JobThread : public Uncopyable
 {
 private:
-    std::thread _thread;
     int         _jobDequeId;
+    std::thread _thread;
 
 public:
     explicit JobThread(int jobDequeId) : _jobDequeId(jobDequeId) { _thread = std::thread(&JobThread::spawn, this); }
@@ -25,6 +25,14 @@ private:
         {
             bool                  pop = false;
             std::function<void()> task;
+
+            // if (JobDequeManager::instance()[_jobDequeId]->tryPop(task))
+            //     pop = true;
+            // else
+            // {
+            //     std::this_thread::yield();
+            //     continue;
+            // }
 
             task();
         }

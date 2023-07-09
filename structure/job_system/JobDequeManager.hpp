@@ -5,7 +5,6 @@
 
 #include "Job.hpp"
 #include "JobDeque.hpp"
-#include "Uncopyable.hpp"
 
 /// @brief manager memorys of job deques, conntrol by main thread
 class JobDequeManager : public Uncopyable

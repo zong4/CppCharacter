@@ -8,6 +8,14 @@ g++, which maybe cause different physical memory model.
 
 # Introduction
 
-## geometry_intersection_structure
+## geometry_intersection
 
 However this structure isn't best, it will waste time(about O(logN)) to search the fix intersection function, but it can be expand dynamicly, which better than call template directly.
+
+## thread_pool
+
+It's a simple job system rather than thread pool by locks which may loss preformance.
+
+## job_system
+
+To learn Lock-Free Programming firstly.

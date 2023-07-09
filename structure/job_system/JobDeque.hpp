@@ -2,7 +2,7 @@
 
 #include <deque>
 
-#include "pch.h"
+#include "../thread_pool/pch.h"
 
 template <typename T>
 class JobDeque : public std::deque<T>
@@ -59,6 +59,8 @@ void JobDeque<T>::clear()
 template <typename T>
 bool JobDeque<T>::pop_front(T& holder)
 {
+    wlock h_lock(_headMtx);
+
     if (std::deque<T>::empty())
         return false;
 
