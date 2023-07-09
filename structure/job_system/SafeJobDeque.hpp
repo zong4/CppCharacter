@@ -1,5 +1,7 @@
 #pragma once
 
+#include <deque>
+
 #include "pch.h"
 
 template <typename T>

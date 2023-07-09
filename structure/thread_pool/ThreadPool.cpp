@@ -32,17 +32,6 @@ void ThreadPool::terminate()
         thread.join();
 }
 
-void ThreadPool::init(int num)
-{
-    // wlock lock(_mtx); // only one instance
-
-    _running = true;
-
-    _threads.reserve(num);
-    for (int i = 0; i < num; ++i)
-        _threads.emplace_back(std::thread(std::bind(&ThreadPool::spawn, this)));
-}
-
 void ThreadPool::cancel()
 {
     {
@@ -58,6 +47,17 @@ void ThreadPool::cancel()
     _cond.notify_all();
     for (auto& thread : _threads)
         thread.join();
+}
+
+void ThreadPool::init(int num)
+{
+    // wlock lock(_mtx); // only one instance
+
+    _running = true;
+
+    _threads.reserve(num);
+    for (int i = 0; i < num; ++i)
+        _threads.emplace_back(std::thread(std::bind(&ThreadPool::spawn, this)));
 }
 
 void ThreadPool::spawn()

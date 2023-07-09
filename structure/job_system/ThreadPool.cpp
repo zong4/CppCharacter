@@ -5,9 +5,9 @@ ThreadPool::ThreadPool(int num)
     init(num);
 }
 
-ThreadPool& ThreadPool::instance()
+ThreadPool& ThreadPool::instance(int num)
 {
-    static ThreadPool pool(4);
+    static ThreadPool pool(num);
     return pool;
 }
 
@@ -27,57 +27,15 @@ void ThreadPool::terminate()
             return;
     }
 
-    _cond.notify_all();
     for (auto& thread : _threads)
-        thread.join();
+        thread->join();
 }
 
 void ThreadPool::init(int num)
 {
-    // wlock lock(_mtx); // only one instance
-
     _running = true;
 
     _threads.reserve(num);
     for (int i = 0; i < num; ++i)
-        _threads.emplace_back(std::thread(std::bind(&ThreadPool::spawn, this)));
-}
-
-void ThreadPool::cancel()
-{
-    {
-        wlock lock(_mtx);
-        if (_running)
-            _running = false;
-        else
-            return;
-
-        _tasks.clear();
-    }
-
-    _cond.notify_all();
-    for (auto& thread : _threads)
-        thread.join();
-}
-
-void ThreadPool::spawn()
-{
-    for (;;)
-    {
-        bool                  pop = false;
-        std::function<void()> task;
-
-        {
-            wlock lock(_mtx);
-            _cond.wait(lock, [this, &pop, &task] {
-                pop = _tasks.pop_front(task);
-                return !_running || pop;
-            });
-        }
-
-        if (!_running)
-            return;
-
-        task();
-    }
+        _threads.emplace_back(std::make_unique<JobThread>());
 }

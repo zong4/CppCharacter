@@ -4,7 +4,6 @@
 #include <functional>
 #include <future>
 #include <thread>
-#include <vector>
 
 #include "TaskQueue.hpp"
 #include "Uncopyable.hpp"
@@ -28,13 +27,13 @@ public:
     bool isRunning() const;
 
     void terminate();
+    void cancel();
 
     template <class F, class... Args>
     auto async(F&& f, Args&&... args) -> std::future<decltype(f(args...))>;
 
 private:
     void init(int num);
-    void cancel();
 
     void spawn();
 };
