@@ -29,8 +29,17 @@ private:
 
             {
                 rlock lock(jobDequeManager._mtx);
-                jobDequeManager._cv.wait(
-                    lock, [this, &jobDequeManager, &task] { return !_running || jobDequeManager[_jobDequeId]->pop_front(task); });
+                jobDequeManager._cv.wait(lock, [this, &jobDequeManager, &task] {
+                    if (!_running || jobDequeManager[_jobDequeId]->pop_front(task))
+                        return true;
+                    else if (jobDequeManager[(_jobDequeId + 1) % 4]->pop_back(task))
+                        return true;
+                    else
+                        return false;
+
+                    // return !_running || jobDequeManager[_jobDequeId]->pop_front(task) ||
+                    //        jobDequeManager[(_jobDequeId + 1) % 4]->pop_back(task);
+                });
             }
 
             if (!_running)
