@@ -17,6 +17,12 @@ bool ThreadPool::isRunning() const
     return _running;
 }
 
+std::shared_ptr<std::condition_variable_any> ThreadPool::getCond() const
+{
+    rlock lock(_mtx);
+    return _cv;
+}
+
 void ThreadPool::terminate()
 {
     {
@@ -27,6 +33,7 @@ void ThreadPool::terminate()
             return;
     }
 
+    _cv->notify_all();
     for (auto& thread : _threads)
         thread->join();
 }
@@ -37,5 +44,5 @@ void ThreadPool::init(int num)
 
     _threads.reserve(num);
     for (int i = 0; i < num; ++i)
-        _threads.emplace_back(std::make_unique<JobThread>());
+        _threads.emplace_back(std::make_unique<JobThread>(JobDequeManager::instance().add()));
 }

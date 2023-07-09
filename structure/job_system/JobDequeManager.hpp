@@ -24,9 +24,9 @@ public:
         return instance;
     }
 
-    // inline JobDeque<std::function<void()>>&       operator[](int index) { return _jobDeques[index]; }
-    // inline const JobDeque<std::function<void()>>& operator[](int index) const { return _jobDeques[index]; }
-    inline void clear() { _jobDeques.clear(); }
+    inline std::shared_ptr<JobDeque<std::function<void()>>>       operator[](int index) { return _jobDeques[index]; }
+    inline const std::shared_ptr<JobDeque<std::function<void()>>> operator[](int index) const { return _jobDeques[index]; }
+    inline void                                                   clear() { _jobDeques.clear(); }
 
     inline int add() // return index
     {

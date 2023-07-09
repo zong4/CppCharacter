@@ -6,20 +6,15 @@
 #include "JobDeque.hpp"
 #include "JobDequeManager.hpp"
 
-class JobThread
+class JobThread : public Uncopyable
 {
 private:
     std::thread _thread;
-    uint32_t    _jobDequeId;
+    int         _jobDequeId;
 
 public:
-    explicit JobThread() {}
     explicit JobThread(int jobDequeId) : _jobDequeId(jobDequeId) { _thread = std::thread(&JobThread::spawn, this); }
-    ~JobThread()                           = default;
-    JobThread(JobThread const&)            = delete;
-    JobThread(JobThread&&)                 = delete;
-    JobThread& operator=(JobThread const&) = delete;
-    JobThread& operator=(JobThread&&)      = delete;
+    ~JobThread() = default;
 
     inline void join() { _thread.join(); }
 
