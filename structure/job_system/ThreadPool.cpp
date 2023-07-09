@@ -17,11 +17,11 @@ bool ThreadPool::isRunning() const
     return _running;
 }
 
-std::shared_ptr<std::condition_variable_any> ThreadPool::getCond() const
-{
-    rlock lock(_mtx);
-    return _cv;
-}
+// std::shared_ptr<std::condition_variable_any> ThreadPool::getCond() const
+// {
+//     rlock lock(_mtx);
+//     return _cv;
+// }
 
 void ThreadPool::terminate()
 {
@@ -33,7 +33,7 @@ void ThreadPool::terminate()
             return;
     }
 
-    _cv->notify_all();
+    // _cv->notify_all();
     for (auto& thread : _threads)
         thread->join();
 }
