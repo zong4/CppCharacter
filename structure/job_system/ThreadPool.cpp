@@ -13,7 +13,6 @@ ThreadPool& ThreadPool::instance(int num)
 
 bool ThreadPool::isRunning() const
 {
-    rlock lock(_mtx);
     return _running;
 }
 
@@ -25,17 +24,14 @@ bool ThreadPool::isRunning() const
 
 void ThreadPool::terminate()
 {
-    {
-        wlock lock(_mtx);
-        if (_running)
-            _running = false;
-        else
-            return;
-    }
+    _running = false;
 
     // _cv->notify_all();
     for (auto& thread : _threads)
+    {
+        thread->setRunning(false);
         thread->join();
+    }
 }
 
 void ThreadPool::init(int num)
