@@ -15,7 +15,7 @@ using rlock = std::shared_lock<std::shared_mutex>;
 #ifdef _WIN32
     #define COMPILER_BARRIER _ReadWriteBarrier()
 
-#else define __GNUC__
+#elif __linux__
     #define COMPILER_BARRIER asm volatile("" ::: "memory")
 
 #endif
