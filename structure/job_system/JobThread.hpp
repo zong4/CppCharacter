@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <thread>
 
 #include "JobDequeManager.hpp"
@@ -32,13 +33,13 @@ private:
                 jobDequeManager._cv.wait(lock, [this, &jobDequeManager, &task] {
                     if (!_running || jobDequeManager[_jobDequeId]->pop_front(task))
                         return true;
-                    else if (jobDequeManager[(_jobDequeId + 1) % 4]->pop_back(task))
+                    else if (jobDequeManager[(_jobDequeId + 1) % thread_num]->pop_back(task))
                         return true;
                     else
                         return false;
 
                     // return !_running || jobDequeManager[_jobDequeId]->pop_front(task) ||
-                    //        jobDequeManager[(_jobDequeId + 1) % 4]->pop_back(task);
+                    //        jobDequeManager[(_jobDequeId + 1) % thread_num]->pop_back(task);
                 });
             }
 
@@ -46,6 +47,8 @@ private:
                 return;
 
             task();
+
+            // std::this_thread::sleep_for(std::chrono::seconds(thread_num - _jobDequeId));
         }
     }
 };

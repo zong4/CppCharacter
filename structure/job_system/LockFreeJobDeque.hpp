@@ -51,6 +51,9 @@ bool LockFreeJobDeque<T>::pop_back(T& holder)
     std::deque<T>::pop_back();
 
     _size.fetch_sub(1, std::memory_order_relaxed);
+
+    std::cout << "called(stole) by other thread" << std::endl;
+
     return true;
 }
 

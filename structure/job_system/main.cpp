@@ -6,7 +6,7 @@
 int main()
 {
     JobDequeManager& jobDequeManager = JobDequeManager::instance();
-    ThreadPool&      pool            = ThreadPool::instance(4);
+    ThreadPool&      pool            = ThreadPool::instance(thread_num);
 
     // print pool status
     std::cout << "pool is running: " << pool.isRunning() << std::endl;

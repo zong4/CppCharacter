@@ -21,5 +21,5 @@ It's a simple job system rather than thread pool by locks which may loss preform
 To learn Lock-Free Programming firstly.
 
 - [✔] Free lock deques
-- [✖] Steel jobs
+- [✖] Steal jobs
 - [✖] Distribute jobs

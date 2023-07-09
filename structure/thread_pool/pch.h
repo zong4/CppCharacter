@@ -1,6 +1,6 @@
 #pragma once
 
-// #include <iostream>
+#include <iostream>
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
@@ -10,4 +10,12 @@
 using wlock = std::unique_lock<std::shared_mutex>;
 using rlock = std::shared_lock<std::shared_mutex>;
 
-#define COMPILER_BARRIER asm volatile("" ::: "memory") // for g++ compiler
+#define thread_num 2
+
+#ifdef _WIN32
+    #define COMPILER_BARRIER _ReadWriteBarrier()
+
+#else define __GNUC__
+    #define COMPILER_BARRIER asm volatile("" ::: "memory")
+
+#endif

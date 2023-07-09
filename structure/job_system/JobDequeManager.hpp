@@ -51,7 +51,7 @@ public:
         std::shared_ptr<task_type> task      = std::make_shared<task_type>(std::move(bind_func));
 
         _jobDeques[_index]->push_front([task]() -> void { (*task)(); });
-        _index = (++_index) % _jobDeques.size(); // distribute jobs to different threads
+        // _index = (++_index) % _jobDeques.size(); // distribute jobs to different threads
         _cv.notify_all();
 
         future_type fut = task->get_future();
