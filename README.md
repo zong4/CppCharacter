@@ -27,3 +27,5 @@ To learn Lock-Free Programming firstly.
 - [✔] Free lock deques
 - [✔] Steal jobs
 - [✖] Distribute jobs(do by your self)
+
+Over all, I think the most important theroy in Lock-Free Programming is avoiding collision(like deque).
