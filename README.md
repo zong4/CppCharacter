@@ -12,7 +12,7 @@ g++, which maybe cause different physical memory model.
 
 ### split
 
-Compare three approachs: find, stringstream, tokenizer(boost), the main impact factor is the ratio of delimiter and letter.
+Compare three approachs: find, stringstream, tokenizer(boost), the main impact factor is the ratio of delimiter and letter, not just the letter number of string.
 
 The result is:
 1. When the ratio is low(like 1 : 100), find is the best.
