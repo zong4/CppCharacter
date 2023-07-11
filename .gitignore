@@ -38,3 +38,10 @@
 .xmake/
 vsxmake2022/
 build/
+
+# VS cache
+.vs/
+
+# CMake cache
+bin/
+out/
