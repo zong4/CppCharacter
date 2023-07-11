@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(geometry)
+project(test)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -12,8 +12,6 @@ file(GLOB SRC
 message(">>> SRC=${SRC}")
 
 add_executable(${PROJECT_NAME} ${SRC})
-
-#add_subdirectory(test)
 
 # boost
 set(Boost_INCLUDE_DIR "C:\\Boost\\boost_1_81_0")

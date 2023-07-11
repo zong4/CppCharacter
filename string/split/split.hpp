@@ -25,9 +25,7 @@ std::vector<std::string> SplitByStream(std::string const& str, char delimiter)
     std::istringstream       tokenStream(str);
 
     while (std::getline(tokenStream, token, delimiter))
-    {
         result.push_back(token);
-    }
 
     return result;
 }
