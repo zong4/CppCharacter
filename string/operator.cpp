@@ -26,6 +26,12 @@ int main()
         std::cout << getBackNumber(str) << std::endl;
     }
 
+    {
+        std::string str = "";
+        int         num = stoi(str);
+        std::cout << num << std::endl;
+    }
+
     return 0;
 }
 

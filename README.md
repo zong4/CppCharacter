@@ -30,6 +30,10 @@ This method can hide the bottom implementation details.
 
 However this structure isn't best, it will waste time(about O(logN)) to search the fix intersection function, but it can be expand dynamicly, which better than call template directly.
 
+Well, I scan the paper of boost polygon, it calls the correct algorithm through dispatching the types of items, which is same!
+
+Oh, let's use hash map to store.
+
 ### thread_pool
 
 It's a simple job system rather than thread pool by locks which may loss preformance.

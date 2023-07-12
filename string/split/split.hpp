@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <vector>
 
 typedef std::chrono::microseconds time_unit;
@@ -52,6 +53,21 @@ std::vector<std::string> SplitByFind(std::string const& s, char delimiter)
     return SplitByFind(s, std::string(1, delimiter));
 }
 
+std::vector<std::string_view> SplitBySV(std::string_view str, char delimiter)
+{
+    std::vector<std::string_view> result;
+    size_t                        pos_start = 0, pos_end;
+
+    while ((pos_end = str.find(delimiter, pos_start)) != std::string_view::npos)
+    {
+        result.push_back(str.substr(pos_start, pos_end - pos_start));
+        pos_start = pos_end + 1;
+    }
+
+    result.push_back(str.substr(pos_start));
+    return result;
+}
+
 void TestByString(std::string const& str, char delimiter)
 {
     std::cout << "Size of the string: " << str.size() << std::endl;
@@ -85,12 +101,35 @@ void TestByString(std::string const& str, char delimiter)
         std::cout << "Split by find: " << findElapsed.count() << " " + time_unit_name << std::endl;
     }
 
-    // compare two elapsed time
-    if (streamElapsed < findElapsed)
-        std::cout << "Split by stream is faster " + std::to_string((double)findElapsed.count() / (double)streamElapsed.count()) + " times."
+    time_unit                svElapsed;
+    std::vector<std::string> svResult;
+    {
+        // count time of split by find
+        auto start = std::chrono::steady_clock::now();
+        svResult   = SplitByFind(str, delimiter);
+        auto end   = std::chrono::steady_clock::now();
+
+        // print time
+        svElapsed = std::chrono::duration_cast<time_unit>(end - start);
+        std::cout << "Split by sv: " << svElapsed.count() << " " + time_unit_name << std::endl;
+    }
+
+    // // compare two elapsed time
+    // if (streamElapsed < findElapsed)
+    //     std::cout << "Split by stream is faster " + std::to_string((double)findElapsed.count() / (double)streamElapsed.count()) + "
+    //     times."
+    //               << std::endl;
+    // else
+    //     std::cout << "Split by find is faster " + std::to_string((double)streamElapsed.count() / (double)findElapsed.count()) + " times."
+    //               << std::endl;
+
+    // compare string and string_view
+    if (svElapsed < findElapsed)
+        std::cout << "Find with string_view is faster " + std::to_string((double)findElapsed.count() / (double)svElapsed.count()) +
+                         " times."
                   << std::endl;
     else
-        std::cout << "Split by find is faster " + std::to_string((double)streamElapsed.count() / (double)findElapsed.count()) + " times."
+        std::cout << "Find with string is faster " + std::to_string((double)svElapsed.count() / (double)findElapsed.count()) + " times."
                   << std::endl;
 }
 
