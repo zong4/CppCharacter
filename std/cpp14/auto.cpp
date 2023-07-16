@@ -40,7 +40,13 @@ int main()
     {
         std::string name2 = "Hello2";
         DeliverTRef1(name2); // std::string &
-        DeliverT(name2) = 'W';
+
+        auto ch1 = DeliverT(name2); // copy char
+        ch1      = 'W';
+        std::cout << name2 << std::endl;
+
+        auto& ch2 = DeliverT(name2);
+        ch2       = 'W';
         std::cout << name2 << std::endl;
     }
 
