@@ -4,10 +4,10 @@
 
 #define PRINT
 #include "A.hpp"
-#include "Allocator.hpp"
+#include "HugeVector.hpp"
 
-int size     = 1;
-int capacity = 2;
+constexpr size_t size     = 1;
+constexpr size_t capacity = 3;
 
 int main()
 {
@@ -16,58 +16,52 @@ int main()
     {
         std::vector<A> vec;
 
-        vec.reserve(capacity);
+        std::cout << std::endl << "reserve(size)" << std::endl;
 
+        vec.reserve(size);
         for (int i = 0; i < size; ++i)
             vec.emplace_back(i);
 
-        vec.shrink_to_fit();
+        std::cout << std::endl << "reserve(capacity)" << std::endl;
 
-        // std::partition(vec.begin(), vec.end(), [](A const& a) { return a._num % 2 == 0; });
-        // vec.resize(5);
+        vec.reserve(capacity);
+        for (int i = size; i < capacity; ++i)
+            vec.emplace_back(i);
 
         // std::cout << "A constructor num: " << A::_constructor_num << std::endl;
         // std::cout << "A copy num: " << A::_copy_num << std::endl;
         // std::cout << "A move num: " << A::_move_num << std::endl;
+
+        std::cout << std::endl << "end" << std::endl;
     }
 
-    // c style
-    std::cout << std::endl << "c style" << std::endl << std::endl;
+    // self vector
+    std::cout << std::endl << "self vector" << std::endl << std::endl;
     {
-        A* arr;
+        HugeVector<A> vec;
 
-        // malloc
-        arr = (A*)malloc(sizeof(A) * capacity);
+        std::cout << std::endl << "reserve(size)" << std::endl;
 
-        // placement new
+        vec.reserve(size);
         for (int i = 0; i < size; ++i)
-            new (arr + i) A(i);
+            vec.emplace_back(i);
 
-        // realloc
-        arr = (A*)realloc(arr, sizeof(A) * (capacity + 1));
+        std::cout << std::endl << "reserve(capacity)" << std::endl;
+
+        vec.reserve(capacity);
+        for (int i = size; i < capacity; ++i)
+            vec.emplace_back(i);
+
+        // std::cout << std::endl << "print" << std::endl;
+
+        // for (int i = 0; i < capacity; ++i)
+        //     std::cout << vec[i]._num << std::endl;
 
         // std::cout << "A constructor num: " << A::_constructor_num << std::endl;
         // std::cout << "A copy num: " << A::_copy_num << std::endl;
         // std::cout << "A move num: " << A::_move_num << std::endl;
-    }
 
-    // self allocator
-    std::cout << std::endl << "self allocator" << std::endl << std::endl;
-    {
-        MyAllocator<A> allocator;
-
-        A* arr = allocator.allocate(size);
-        for (int i = 0; i < size; i++)
-            arr[i] = A(i);
-
-        arr = allocator.allocate(capacity, arr);
-        for (int i = size; i < capacity; i++)
-            arr[i] = A(i);
-
-        for (int i = 0; i < capacity; i++)
-            allocator.destroy(arr + i);
-
-        allocator.deallocate(arr, capacity);
+        std::cout << std::endl << "end" << std::endl;
     }
 
     return 0;

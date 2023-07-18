@@ -3,7 +3,7 @@
 class A
 {
 public:
-    int _num = 1;
+    int _num = -1;
 
     static int _constructor_num;
     static int _copy_num;
