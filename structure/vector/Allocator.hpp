@@ -7,6 +7,7 @@ class MyRawAllocator
 {
 public:
     MyRawAllocator() noexcept {}
+    ~MyRawAllocator() = default;
 
     void* allocate(std::size_t n)
     {
@@ -42,6 +43,7 @@ public:
     }
 
     T* allocate(std::size_t n) { return static_cast<T*>(rawAllocator.allocate(n * sizeof(T))); }
+    T* allocate(std::size_t n, T* p) { return static_cast<T*>(rawAllocator.reallocate(p, n * sizeof(T))); }
 
     void deallocate(T* p, std::size_t n) noexcept { rawAllocator.deallocate(p); }
 
