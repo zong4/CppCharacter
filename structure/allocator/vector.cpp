@@ -3,16 +3,17 @@
 #include <vector>
 
 #include "A.hpp"
+#include "Allocator.hpp"
 
-constexpr int size     = 10;
-constexpr int capacity = 11;
+int size     = 10;
+int capacity = 11;
 
 int main()
 {
     std::cout << std::endl << "c++ style" << std::endl << std::endl;
 
     // c++ style
-    std::vector<A, std::allocator<int>> vec;
+    std::vector<A> vec;
     {
         vec.reserve(capacity);
 
