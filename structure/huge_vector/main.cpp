@@ -2,8 +2,9 @@
 #include <iostream>
 #include <vector>
 
-#define PRINT
 #include "A.hpp"
+
+#define PRINT
 #include "HugeVector.hpp"
 
 constexpr size_t size     = 1;
