@@ -60,6 +60,7 @@ public:
 
     inline size_type     size() const { return _size; }
     inline size_type     capacity() const { return _maxSize; }
+    inline pointer       data() { return _data; }
     inline const_pointer constData() const { return _data; }
     inline reference     operator[](size_type index) { return _data[index]; }
 
@@ -88,6 +89,14 @@ public:
 
         size_type newSize = maxSize > _maxSize * 2 ? maxSize : _maxSize * 2;
         redistribute(newSize);
+    }
+
+    void clear()
+    {
+        for (size_type i = 0; i < _size; ++i)
+            allocator.destroy(_data + i);
+
+        _size = 0;
     }
 
 private:

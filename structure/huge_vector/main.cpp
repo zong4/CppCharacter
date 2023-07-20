@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <iostream>
+#include <ranges>
+#include <span>
 #include <vector>
 
 #include "A.hpp"
@@ -53,10 +55,13 @@ int main()
         for (int i = size; i < capacity; ++i)
             vec.emplace_back(i);
 
-        // std::cout << std::endl << "print" << std::endl;
+        std::cout << std::endl << "scan print" << std::endl;
 
-        // for (int i = 0; i < capacity; ++i)
-        //     std::cout << vec[i]._num << std::endl;
+        std::span<A> span(vec.data(), vec.size());
+
+        auto span_ranges = span | std::views::all;
+        std::ranges::for_each(span_ranges, [](auto&& i) { std::cout << i._num << " "; });
+        std::cout << std::endl;
 
         // std::cout << "A constructor num: " << A::_constructor_num << std::endl;
         // std::cout << "A copy num: " << A::_copy_num << std::endl;

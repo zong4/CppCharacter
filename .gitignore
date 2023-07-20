@@ -45,3 +45,6 @@ build/
 # CMake cache
 bin/
 out/
+
+# Module cache
+gcm.cache/

@@ -1,12 +1,13 @@
 #include <iostream>
 #include <span>
+#include <vector>
 
 int main()
 {
-    int arr[] = {1, 2, 3, 4, 5};
+    std::vector<int> arr = {1, 2, 3, 4, 5};
 
-    // view part of arr as span
-    std::span<int> span1(arr, 3);
+    // view part of arr as span from index 1 to 3
+    std::span<int> span1(arr.begin() + 1, 3);
 
     // print span1
     for (auto& i : span1)
