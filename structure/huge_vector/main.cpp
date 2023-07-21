@@ -55,13 +55,24 @@ int main()
         for (int i = size; i < capacity; ++i)
             vec.emplace_back(i);
 
-        std::cout << std::endl << "scan print" << std::endl;
+        // scan
+        {
+            std::cout << std::endl << "scan print" << std::endl;
 
-        std::span<A> span(vec.data(), vec.size());
+            std::span<A> span(vec.begin(), vec.size());
 
-        auto span_ranges = span | std::views::all;
-        std::ranges::for_each(span_ranges, [](auto&& i) { std::cout << i._num << " "; });
-        std::cout << std::endl;
+            auto span_ranges = span | std::views::all;
+            std::ranges::for_each(span_ranges, [](auto&& i) { std::cout << i._num << " "; });
+            std::cout << std::endl;
+        }
+
+        // stl
+        {
+            std::cout << std::endl << "stl print" << std::endl;
+
+            std::for_each(vec.begin(), vec.end(), [](auto&& i) { std::cout << i._num << " "; });
+            std::cout << std::endl;
+        }
 
         // std::cout << "A constructor num: " << A::_constructor_num << std::endl;
         // std::cout << "A copy num: " << A::_copy_num << std::endl;

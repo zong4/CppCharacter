@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iterator>
+
 #include "RawAllocator.hpp"
 
 template <typename T>
@@ -58,11 +60,14 @@ public:
         allocator.deallocate(_data, _maxSize);
     }
 
-    inline size_type     size() const { return _size; }
-    inline size_type     capacity() const { return _maxSize; }
-    inline pointer       data() { return _data; }
-    inline const_pointer constData() const { return _data; }
-    inline reference     operator[](size_type index) { return _data[index]; }
+    inline size_type size() const { return _size; }
+    inline size_type capacity() const { return _maxSize; }
+    inline reference operator[](size_type index) { return _data[index]; }
+
+    pointer       begin() { return _data; }
+    pointer       end() { return _data + _size; }
+    const_pointer begin() const { return _data; }
+    const_pointer end() const { return _data + _size; }
 
     void push_back(const_reference val)
     {
