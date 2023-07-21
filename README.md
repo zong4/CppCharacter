@@ -22,6 +22,10 @@ So, you can suspect the ratio of delimiter and letter, and then choose the best 
 
 ## structure
 
+### event_dispatch
+
+Bind event.
+
 ### geometry
 
 This method can hide the bottom implementation details.
@@ -67,3 +71,7 @@ Here is the plan.
 Well, it like a factory, main thread creates jobs -> job poll distributes jobs -> deques in job pool stores jobs -> deques of threads get jobs -> threads do jobs.
 
 Over all, I think the most important theroy in Lock-Free Programming is avoiding collision(like deque or cache).
+
+### proxy_pattern
+
+Use CRTP to ensure the interface.
