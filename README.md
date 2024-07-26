@@ -1,16 +1,14 @@
-# Usage
+# Cpp Character
 
-Try some tests when learning.
+## Environment
 
-# Environment
+G++, other maybe cause different physical memory model. 
 
-g++, which maybe cause different physical memory model. 
+## Include
 
-# Introduction
+### algorithm
 
-## algorithm
-
-### split
+#### split
 
 Compare three approachs: find, stringstream, tokenizer(boost), the main impact factor is the ratio of delimiter and letter, not just the letter number of string.
 
@@ -20,17 +18,17 @@ The result is:
 
 So, you can suspect the ratio of delimiter and letter, and then choose the best approach.
 
-## structure
+### structure
 
-### event_dispatch
+#### event_dispatch
 
 Bind event.
 
-### geometry
+#### geometry
 
 This method can hide the bottom implementation details.
 
-### geometry_intersection
+#### geometry_intersection
 
 However this structure isn't best, it will waste time(about O(logN)) to search the fix intersection function, but it can be **expand dynamicly**, which better than call template directly.
 
@@ -38,7 +36,7 @@ Well, I scan the paper of boost polygon, it calls the correct algorithm through 
 
 Oh, let's use hash map to store.
 
-### huge_vector
+#### huge_vector
 
 Why we need this?
 
@@ -53,25 +51,6 @@ If you want to use it in projects, you should do these works.
 - [✖] add iterator to use algorithm
 - [✖] provide a memory pool and implemention realloc function in your memory pool
 
-### thread_pool
-
-It's a simple job system rather than thread pool by locks which may loss preformance.
-
-### job_system
-
-To learn Lock-Free Programming firstly.
-
-Here is the plan.
-
-- [✔] Free lock deques
-- [✔] Steal jobs
-- [✖] **Three deque cache**
-- [✖] Distribute jobs
-
-Well, it like a factory, main thread creates jobs -> job poll distributes jobs -> deques in job pool stores jobs -> deques of threads get jobs -> threads do jobs.
-
-Over all, I think the most important theroy in Lock-Free Programming is avoiding collision(like deque or cache).
-
-### proxy_pattern
+#### proxy_pattern
 
 Use CRTP to ensure the interface.
